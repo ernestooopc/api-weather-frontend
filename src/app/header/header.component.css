@@ -1,0 +1,18 @@
+.navbar {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(8px);
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #f8d210;
+}

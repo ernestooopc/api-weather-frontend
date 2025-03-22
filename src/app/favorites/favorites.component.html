@@ -1,0 +1,8 @@
+<div *ngIf="favorites.length > 0">
+  <h3>Ciudades Favoritas</h3>
+  <ul>
+    <li *ngFor="let city of favorites; trackBy: trackByFn">
+      {{ city }} <button (click)="removeFavorite(city)">❌</button>
+    </li>
+  </ul>
+</div>

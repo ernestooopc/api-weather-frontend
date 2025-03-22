@@ -1,21 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(80%); /* Ajusta el brillo para mejor visibilidad */
+}
+
 html, body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ocupa toda la pantalla */
-    margin: 0;
+  height: 100%;
+  margin: 0;
+  background-attachment: fixed;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
 }
-
-
-body {
-  background: linear-gradient(to bottom, #87CEEB, #f0f8ff); /* Azul cielo */
-  overflow: auto;
-}
-
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -24,4 +28,12 @@ body {
 
 .content {
   flex: 1;
+}
+
+footer {
+  width: 100%;
+  background-color: #2C3E50; /* Ajusta según tu diseño */
+  color: white;
+  text-align: center;
+  padding: 10px;
 }

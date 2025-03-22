@@ -13,6 +13,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    { provide: LOCALE_ID, useValue: 'es' } // Configurar Angular para español
+    { provide: LOCALE_ID, useValue: 'es' }
   ]
 };

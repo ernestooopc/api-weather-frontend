@@ -1,61 +1,106 @@
-
-<div class="contenedor  container-fluid mt-4 d-flex justify-content-center align-items-center gap-3">
-  <input
-    class="form-control "
-    [(ngModel)]="city"
-    placeholder="Ingrese una ciudad"
-    style="max-width: 250px;"
-  />
-  <button class="btn btn-success" (click)="searchClimate()">
-    <i class="material-symbols-outlined">today</i>  Buscar Clima
-  </button>
-  <button class="btn btn-primary" (click)="searchClimateAll()">
-    <i class="material-symbols-outlined">
-      insert_chart
-    </i> Ver Pronóstico Completo
-  </button>
+<div>
+  <div
+    class="buttonGet container-fluid mt-4 d-flex flex-column flex-md-row justify-content-center align-items-center gap-3"
+  >
+    <input class="form-control" type="text" [(ngModel)]="tempCity" />
+    <button
+      class="btn btn-success"
+      (click)="searchClimate()"
+      [disabled]="loadingSearchClimate"
+    >
+      <i class="material-symbols-outlined">today</i>
+      <span *ngIf="!loadingSearchClimate">Buscar Clima</span>
+      <span *ngIf="loadingSearchClimate"
+        ><i class="fas fa-spinner fa-spin"></i> Cargando...</span
+      >
+    </button>
+    <button
+      class="btn btn-primary"
+      (click)="searchClimateAll()"
+      [disabled]="loadingSearchClimateAll"
+    >
+      <i class="material-symbols-outlined">insert_chart</i>
+      <span *ngIf="!loadingSearchClimateAll">Ver Pronóstico Completo</span>
+      <span *ngIf="loadingSearchClimateAll"
+        ><i class="fas fa-spinner fa-spin"></i> Cargando...</span
+      >
+    </button>
 </div>
 
-
-<!-- Clima Actual -->
-<div class="weather-container">
-  <div *ngIf="currentClimate" class="weather-card">
-    <!-- Clima actual -->
-    <h2 class="location">
-      <i class="material-symbols-outlined">location_on</i>
-      {{ city }}
-    </h2>
-    <h1 class="temperature">{{ currentClimate.temp }}°C</h1>
-    <p class="description">{{ currentClimate.description }}</p>
-    <div class="weather-details">
-      <p><i class="material-symbols-outlined">today</i> {{ currentClimate.datetime  | date:'EEEE, d MMMM yyyy':'es'}}</p>
-      <p><i class="material-symbols-outlined">thermostat</i> <strong> Min:</strong> {{ currentClimate.tempmin }}°C | <strong> Máx:</strong> {{ currentClimate.tempmax }}°C</p>
-      <p><i class="material-symbols-outlined">humidity_mid</i> {{ currentClimate.humidity }}%</p>
-      <p><i class="material-symbols-outlined">airwave</i> {{ currentClimate.windspeed }} km/h</p>
+<div class="weather-container mt-5">
+  <!-- Tarjeta de Clima Actual -->
+  <div class="row">
+    <!-- CARD -->
+    <div class="col-12 col-md-6 col-sm-12">
+      <div
+        *ngIf="currentClimate"
+        class="weather-card"
+        [@fadeInUp]="showAnimation ? 'in' : 'static'"
+      >
+        <div (click)="toggleFavorite()" class="favorite-star">⭐</div>
+        <h2 class="location">
+          <i class="material-symbols-outlined">location_on</i
+          ><span class="location-name-city"> {{ city }}</span>
+        </h2>
+        <h1 class="temperature">{{ currentClimate.temp }}°C</h1>
+        <p class="description">{{ currentClimate.description }}</p>
+        <div class="weather-details">
+          <p>
+            <i class="material-symbols-outlined">today</i>
+            {{ currentClimate.datetime | date : "EEEE, d MMMM yyyy" : "es" }}
+          </p>
+          <p>
+            <i class="material-symbols-outlined">thermostat</i>
+            <strong> Min:</strong> {{ currentClimate.tempmin }}°C |
+            <strong> Máx:</strong> {{ currentClimate.tempmax }}°C
+          </p>
+          <p>
+            <i class="material-symbols-outlined">humidity_mid</i>
+            {{ currentClimate.humidity }}%
+          </p>
+          <p>
+            <i class="material-symbols-outlined">airwave</i>
+            {{ currentClimate.windspeed }} km/h
+          </p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div *ngIf="allClimate.length > 0" class="forecast-container">
-    <h2><i class="material-symbols-outlined">today</i>Pronóstico de los Proximos 10 dias</h2>
-    <div class="forecast-list">
-      <div *ngFor="let clima of allClimate.slice(0, 10)" class="forecast-item">
-        <div class="forecast-date">{{ clima.datetime  | date:'EEEE':'es' }}</div>
-        <div class="forecast-info">
-          <img [src]="'assets/' + getWeatherIcon(clima.description)" class="weather-icon" />
-          <div class="forecast-temp">{{ clima.temp }}°C</div>
+    <!-- Tarjeta de Pronóstico -->
+    <div class="col-12 col-md-6 col-sm-12">
+      <div *ngIf="allClimate?.length" class="forecast-container" @fadeInUp>
+        <h2>
+          <i class="material-symbols-outlined">today</i> Pronóstico de los
+          Próximos 10 Días
+        </h2>
+        <div class="forecast-list">
+          <div
+            *ngFor="let clima of allClimate.slice(0, 10)"
+            class="forecast-item"
+          >
+            <div class="forecast-date">
+              {{ clima.datetime | date : "EEEE" : "es" }}
+            </div>
+            <div class="temp-bar">
+              <span class="temp-min">{{ clima.tempmin }}°</span>
+              <div class="forecast-progress">
+                <div
+                  class="progress-bar"
+                  [style.width.%]="clima.progressValue"
+                ></div>
+              </div>
+              <span class="temp-max">{{ clima.tempmax }}°</span>
+            </div>
+            <div class="forecast-info">
+              <img
+                [src]="'assets/' + getWeatherIcon(clima.description)"
+                class="weather-icon"
+              />
+              <div class="forecast-temp">{{ clima?.temp || 0 }}°C</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-
-  <!-- <div class="temperature-bar">
-    <div class="temperature-fill" style="width: 70%;"></div>
-</div>
-<div class="temperature-labels">
-    <span>19°</span>
-    <span>26°</span>
-</div> -->
-
-
 </div>
