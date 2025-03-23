@@ -13,6 +13,7 @@
 }
 
 html, body {
+  font-family: 'SF Pro Display', sans-serif!important;
   height: 100%;
   margin: 0;
   background-attachment: fixed;
@@ -36,4 +37,12 @@ footer {
   color: white;
   text-align: center;
   padding: 10px;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('assets/fonts/SF-Pro.ttf') format('truetype'),
+       url('assets/fonts/SF-Pro-Display-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }

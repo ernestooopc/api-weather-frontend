@@ -3,7 +3,7 @@ import { Clima } from '../models/clima.model';
 import { ClimaService } from '../clima.service';
 import { FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { forkJoin, of, take } from 'rxjs';
+import { forkJoin, of, Subscription, take } from 'rxjs';
 import { TranslationService } from '../translation.service';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -27,6 +27,7 @@ import { StateService } from '../state.service';
   ]
 })
 export class MainComponent {
+  isFavorite = false;
   weatherData: Clima | null = null;
   currentClimate:Clima | null = null;
   allClimate: Clima[] = [];
@@ -41,16 +42,20 @@ export class MainComponent {
   showAnimation = true;
   loadingSearchClimate = false;
   loadingSearchClimateAll = false;
+  private favoritesSubscription: Subscription = new Subscription;
 
   constructor(private climaService: ClimaService,
     private translationService: TranslationService,
     private cdr: ChangeDetectorRef,
     private favoritesService: FavoritesService,
-    private stateService: StateService
+    private stateService: StateService,
+
   ) {}
 
 
   ngOnInit() {
+
+
     if (this.stateService.hasBeenInitialized()) {
       this.tempCity = this.stateService.getLastSearch();
       this.city = this.tempCity;
@@ -68,6 +73,20 @@ export class MainComponent {
       }).catch(error => {
         console.error('Error obteniendo coordenadas', error);
       });
+      const saveFavorite = localStorage.getItem('isFavorite');
+      this.isFavorite = saveFavorite === 'true';  // Convierte string a booleano
+    }
+
+
+    this.favoritesSubscription = this.favoritesService.favorites$.subscribe(() => {
+    this.checkFavorite();
+    });
+
+  }
+
+  ngOnDestroy() {
+    if (this.favoritesSubscription) {
+      this.favoritesSubscription.unsubscribe();
     }
   }
 
@@ -210,13 +229,13 @@ export class MainComponent {
   getWeatherIcon(description: string): string {
     console.log("Descripción recibida:", description); // Para depuración
     let icon = 'default.png';
-    if (description.includes('Cielos nublados durante todo el día')) {
+    if (description.includes('Parcialmente nublado durante todo el día.')) {
       icon = 'cloudy.png';
     } else if (description.includes('Lluvia')) {
       icon = 'rain.png';
     } else if (description.includes('soleado')) {
       icon = 'sunny.png';
-    } else if (description.includes('Parcialmente_nublado')) {
+    } else if (description.includes('Parcialmente nublada.')) {
       icon = 'partly-cloudy.png';
     }
     const iconPath = `${icon}`;
@@ -237,9 +256,24 @@ export class MainComponent {
     }, 50);
   }
 
+  checkFavorite() {
+    this.isFavorite = this.favoritesService.getFavorites().includes(this.city);
+  }
+
+
 
   toggleFavorite() {
-    this.favoritesService.addCity(this.city);
+    if (!this.isFavorite) {
+      this.isFavorite = true;
+      this.favoritesService.addCity(this.city);
+      localStorage.setItem('isFavorite', 'true');
+      alert("Se agregó a favoritos.");
+    } else {
+      this.favoritesService.removeCity(this.city);
+      this.isFavorite = false;
+      localStorage.setItem('isFavorite', 'false');
+      alert("Se eliminó de favoritos.");
+    }
     if (this.currentClimate) {
       this.stateService.setCurrentClimate(this.currentClimate);
     }
@@ -248,8 +282,9 @@ export class MainComponent {
     }
     this.stateService.setLastSearch(this.city);
     this.stateService.setInitialized(true);
-    alert("Se agregó a favoritos");
   }
+
+
 
 
 }

@@ -29,13 +29,26 @@
   gap: 10px;
 }
 
+.start {
+  width: 40px;
+  height: 40px;
+  stroke: gold;
+  fill: transparent;
+  transition: fill 0.4s ease-in-out;
+  cursor: pointer;
+}
+
+.start.favorite {
+  fill: gold;
+}
+
 
 .weather-card {
   margin-bottom:15px;
   min-width: 300px;
+  min-height:480px;
   width:100%;
   max-width:400px;
-  max-height: 480px;
   overflow: hidden;
   background: linear-gradient(135deg,rgb(58, 140, 255),rgb(198, 237, 240));
   color: white;
@@ -91,7 +104,7 @@
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.2);
-  padding: 12px;
+  padding: 5px;
   border-radius: 8px;
   margin:12px;
 }
