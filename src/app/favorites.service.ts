@@ -33,9 +33,9 @@ export class FavoritesService {
 
   removeCity(city: string) {
     //console.log("Antes de eliminar:", this.favorites);
-
+    if (confirm(`¿Eliminar ${city} de favoritos?`)) {
     this.favorites = this.favorites.filter(favCity => favCity.trim().toLowerCase() !== city.trim().toLowerCase());
-
+    }
     //console.log("Después de eliminar:", this.favorites);
   }
 

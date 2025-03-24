@@ -10,6 +10,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef } from '@angular/core';
 import { FavoritesService } from '../favorites.service';
 import { StateService } from '../state.service';
+import { ActivatedRoute  } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -49,13 +50,18 @@ export class MainComponent {
     private cdr: ChangeDetectorRef,
     private favoritesService: FavoritesService,
     private stateService: StateService,
+    private route: ActivatedRoute
 
   ) {}
 
 
   ngOnInit() {
-
-
+    this.route.queryParams.subscribe(params => {
+      if (params['city']) {
+        this.city = params['city'];
+        this.searchClimate();
+      }
+    });
     if (this.stateService.hasBeenInitialized()) {
       this.tempCity = this.stateService.getLastSearch();
       this.city = this.tempCity;
@@ -90,17 +96,6 @@ export class MainComponent {
     }
   }
 
-
-  updateCity() {
-    if (this.tempCity.trim()) {
-      this.city = this.tempCity;
-      if (this.weatherData) {
-        this.searchClimate();
-      } else {
-        console.error("weatherData no está definida");
-      }
-    }
-  }
 
 
   searchClimate() {
@@ -265,17 +260,12 @@ export class MainComponent {
   }
 
   toggleFavorite() {
-    console.log("TOGGLE FAVORITE - Ciudad actual:", this.city);
-  console.log("TOGGLE FAVORITE - Estado antes del cambio:", this.isFavoriteStar(this.city));
-
   if (this.isFavoriteStar(this.city)) {
     this.favoritesService.removeCity(this.city);
-    alert("Eliminado de Favoritos");
   } else {
     this.favoritesService.addCity(this.city);
-    alert("Agregado a Favoritos");
+    alert(this.city+": Agregada a Favoritos");
   }
-
     if (this.currentClimate) {
       this.stateService.setCurrentClimate(this.currentClimate);
     }

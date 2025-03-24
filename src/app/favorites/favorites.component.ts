@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FavoritesService } from '../favorites.service';
 import { FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Route,Router } from '@angular/router';
 
 @Component({
   selector: 'app-favorites',
@@ -12,8 +13,13 @@ import { CommonModule } from '@angular/common';
 })
 export class FavoritesComponent {
   favorites: string[] = [];
+  searchTerm: any;
 
-  constructor(private favoritesService: FavoritesService) {}
+  constructor(private favoritesService: FavoritesService, private router:Router) {}
+
+  getClima(city: string) {
+    this.router.navigate(['/'], { queryParams: { city } });
+  }
 
   ngOnInit() {
     this.loadFavorites();
@@ -32,4 +38,6 @@ export class FavoritesComponent {
   trackByFn(index: number, item: string) {
     return item;
   }
+
+
 }

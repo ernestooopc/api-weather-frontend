@@ -1,9 +1,12 @@
+
+
 <div class="container favorites-container">
   <div *ngIf="favorites.length > 0">
     <h3>Ciudades Favoritas</h3>
     <ul>
       <li *ngFor="let city of favorites; trackBy: trackByFn">
         {{ city }} <button (click)="removeFavorite(city)">❌</button>
+        <button (click)="getClima(city)">Ver Clima</button>
       </li>
     </ul>
   </div>
