@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class FavoritesService {
   private favorites: string[] = [];
-
+  private starFavorite: boolean = false;
     //BehaviorSubject almacena ultimo valor
   private favoritesSubject = new BehaviorSubject<string[]>(this.favorites);
 
@@ -32,15 +32,19 @@ export class FavoritesService {
   }
 
   removeCity(city: string) {
-    this.favorites = this.favorites.filter(c => c !== city);
+    //console.log("Antes de eliminar:", this.favorites);
 
-    //emite nuevo estado a todos los subscriptores
-    this.favoritesSubject.next([...this.favorites]);
+    this.favorites = this.favorites.filter(favCity => favCity.trim().toLowerCase() !== city.trim().toLowerCase());
+
+    //console.log("Después de eliminar:", this.favorites);
   }
 
   isFavorite(city: string): boolean {
-    return this.favorites.includes(city);
+    if (!this.favorites || this.favorites.length === 0) return false;
+    return this.favorites.some(favCity => favCity.trim().toLowerCase() === city.trim().toLowerCase());
   }
+
+
 
   constructor() {}
 }

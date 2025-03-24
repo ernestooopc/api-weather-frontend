@@ -260,20 +260,22 @@ export class MainComponent {
     this.isFavorite = this.favoritesService.getFavorites().includes(this.city);
   }
 
-
+  isFavoriteStar(city: string): boolean {
+    return this.favoritesService.isFavorite(city);
+  }
 
   toggleFavorite() {
-    if (!this.isFavorite) {
-      this.isFavorite = true;
-      this.favoritesService.addCity(this.city);
-      localStorage.setItem('isFavorite', 'true');
-      alert("Se agregó a favoritos.");
-    } else {
-      this.favoritesService.removeCity(this.city);
-      this.isFavorite = false;
-      localStorage.setItem('isFavorite', 'false');
-      alert("Se eliminó de favoritos.");
-    }
+    console.log("TOGGLE FAVORITE - Ciudad actual:", this.city);
+  console.log("TOGGLE FAVORITE - Estado antes del cambio:", this.isFavoriteStar(this.city));
+
+  if (this.isFavoriteStar(this.city)) {
+    this.favoritesService.removeCity(this.city);
+    alert("Eliminado de Favoritos");
+  } else {
+    this.favoritesService.addCity(this.city);
+    alert("Agregado a Favoritos");
+  }
+
     if (this.currentClimate) {
       this.stateService.setCurrentClimate(this.currentClimate);
     }
