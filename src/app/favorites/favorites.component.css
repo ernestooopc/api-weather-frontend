@@ -55,3 +55,7 @@
   padding: 20px;
   font-style: italic;
 }
+
+.form-control{
+  width:250px;
+}

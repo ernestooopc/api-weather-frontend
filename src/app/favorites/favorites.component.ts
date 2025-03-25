@@ -13,7 +13,8 @@ import { Route,Router } from '@angular/router';
 })
 export class FavoritesComponent {
   favorites: string[] = [];
-  searchTerm: any;
+  filteredFavoritesList: string[] = [];
+  searchTerm: string = '';
 
   constructor(private favoritesService: FavoritesService, private router:Router) {}
 
@@ -37,6 +38,12 @@ export class FavoritesComponent {
 
   trackByFn(index: number, item: string) {
     return item;
+  }
+
+  searchFavorites() {
+    this.filteredFavoritesList = this.favorites.filter(city =>
+      city.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
   }
 
 
